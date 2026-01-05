@@ -1,0 +1,834 @@
+{
+  "name": "api run screener and trader",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://paper-api.alpaca.markets/v2/account",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APCA-API-KEY-ID",
+              "value": "PKXT7VM3545L6HYDMGFOAPDWK4"
+            },
+            {
+              "name": "APCA-API-SECRET-KEY",
+              "value": "6PGLYE7AMiG4yCSBkUXbVFt85ZH15FjRvF2wMajRQ6xv"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1311dd64-4b51-4e2e-ab20-9621e3b41e03",
+      "name": "Alpaca-get-account-info",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1152,
+        544
+      ],
+      "executeOnce": true,
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://paper-api.alpaca.markets/v2/positions/{{ $json.symbol }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APCA-API-KEY-ID",
+              "value": "PKXT7VM3545L6HYDMGFOAPDWK4"
+            },
+            {
+              "name": "APCA-API-SECRET-KEY",
+              "value": "6PGLYE7AMiG4yCSBkUXbVFt85ZH15FjRvF2wMajRQ6xv"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "1aa8a8aa-b765-4674-9177-15167da914be",
+      "name": "Alpaca-post-order-sell",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2912,
+        432
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://paper-api.alpaca.markets/v2/orders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APCA-API-KEY-ID",
+              "value": "PKXT7VM3545L6HYDMGFOAPDWK4"
+            },
+            {
+              "name": "APCA-API-SECRET-KEY",
+              "value": "6PGLYE7AMiG4yCSBkUXbVFt85ZH15FjRvF2wMajRQ6xv"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "symbol",
+              "value": "={{ $json.symbol }}"
+            },
+            {
+              "name": "side",
+              "value": "buy"
+            },
+            {
+              "name": "type",
+              "value": "market"
+            },
+            {
+              "name": "time_in_force",
+              "value": "day"
+            },
+            {
+              "name": "qty",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0d966c99-bf41-4cc6-82de-217e25a7fcf2",
+      "name": "Alpaca-post-order-buy",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2912,
+        640
+      ],
+      "typeVersion": 4.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1R7_Z5Ctw1K_2HogYCIZxpG8_ZKdxXRllUthrLpIJKJw",
+          "mode": "list",
+          "cachedResultName": "Stock Sentiment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R7_Z5Ctw1K_2HogYCIZxpG8_ZKdxXRllUthrLpIJKJw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R7_Z5Ctw1K_2HogYCIZxpG8_ZKdxXRllUthrLpIJKJw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.balance_asof }}",
+            "Equity": "={{ $json.equity }}"
+          },
+          "matchingColumns": [
+            "date"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Equity",
+              "displayName": "Equity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "id": "c4ce7556-5966-493e-8017-0377c2bcd2be",
+      "name": "write_account_balace_today",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1376,
+        544
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "8TizGgm8cCFYR66A",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://paper-api.alpaca.markets/v2/positions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APCA-API-KEY-ID",
+              "value": "PKXT7VM3545L6HYDMGFOAPDWK4"
+            },
+            {
+              "name": "APCA-API-SECRET-KEY",
+              "value": "6PGLYE7AMiG4yCSBkUXbVFt85ZH15FjRvF2wMajRQ6xv"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "657726f0-38f0-4863-b911-1050cf345d84",
+      "name": "Alpaca_get_open_positions",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1792,
+        544
+      ],
+      "executeOnce": true,
+      "typeVersion": 4.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. DEFINE NODE NAME\n// Make sure this matches your Gemini node name EXACTLY\nconst ai_node_name = 'Message a model'; \n\nlet positions_to_open = [];\n\ntry {\n  // 2. GET THE RAW TEXT\n  // We try to grab the text, handling different input structures\n  let raw_text = \"\";\n  try {\n     // Try standard path\n     raw_text = $(ai_node_name).item.json.content.parts[0].text;\n  } catch(e) {\n     // Fallback: Use the immediate input\n     raw_text = items[0].json.content.parts[0].text;\n  }\n\n  // 3. CLEAN & EXTRACT (The Bulletproof Fix)\n  // Step A: Find the JSON list (ignore \"Here is the list:\" text)\n  const firstBracket = raw_text.indexOf('[');\n  const lastBracket = raw_text.lastIndexOf(']');\n  \n  if (firstBracket !== -1 && lastBracket !== -1) {\n      let jsonString = raw_text.substring(firstBracket, lastBracket + 1);\n      \n      // Step B: Remove markdown and newlines to be safe\n      jsonString = jsonString.replace(/```json/g, \"\").replace(/```/g, \"\");\n      \n      // Step C: Fix trailing commas (Common AI mistake: {\"symbol\": \"A\",})\n      // This regex removes a comma if it's right before a closing bracket\n      jsonString = jsonString.replace(/,(\\s*[\\]}])/g, '$1');\n\n      // Step D: Parse\n      positions_to_open = JSON.parse(jsonString);\n  } else {\n      console.log(\"No JSON brackets found in text.\");\n  }\n\n} catch (error) {\n  console.log(\"Parsing failed. Raw text was:\", items[0].json.content?.parts?.[0]?.text);\n  console.log(\"Error:\", error);\n  positions_to_open = [];\n}\n\n// 4. SET THE OUTPUT\n// Force the field to exist, even if empty\nitems[0].json.positions_to_open = positions_to_open;\n\n// (Optional) Pass through the Sell List if it exists\ntry {\n    const sellNode = $('Alpaca_get_open_positions');\n    // Only map if the node actually ran and has items\n    if (sellNode && sellNode.all().length > 0) {\n        items[0].json.positions_to_close = sellNode.all().map(i => i.json);\n    } else {\n        items[0].json.positions_to_close = [];\n    }\n} catch (e) {\n    items[0].json.positions_to_close = [];\n}\n\nreturn items;"
+      },
+      "id": "7d04afeb-3b24-4c96-9cf9-16999a14fec4",
+      "name": "create_positions_to_close_and_positions_two_open",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2256,
+        544
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "positions_to_close",
+        "options": {}
+      },
+      "id": "a8bbdca1-d531-4384-bde9-8c1bf0979677",
+      "name": "positions_to_close",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        2480,
+        448
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "a6175bb8-d92e-4c36-9f70-9411567f80c8",
+      "name": "merge_orders_to_write_to_sheets",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        3136,
+        544
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "content": "## Alpaca Trading 📈\nthis workflow takes the sentiment analysis made by our sentiment analysis bot workflow ([template link](https://n8n.io/workflows/5369-automated-stock-sentiment-analysis-with-google-gemini-and-eodhd-news-api/)) and translates it into automated trading actions using a paper trading account on Alpaca. It manages the portfolio by selling underperforming assets and buying stocks with high positive sentiment.",
+        "height": 380,
+        "width": 400
+      },
+      "id": "d74f036b-e085-43d4-a47d-82820e68bbed",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1R7_Z5Ctw1K_2HogYCIZxpG8_ZKdxXRllUthrLpIJKJw",
+          "mode": "list",
+          "cachedResultName": "Stock Sentiment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R7_Z5Ctw1K_2HogYCIZxpG8_ZKdxXRllUthrLpIJKJw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1598818943,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R7_Z5Ctw1K_2HogYCIZxpG8_ZKdxXRllUthrLpIJKJw/edit#gid=1598818943"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.created_at }}",
+            "Symbol": "={{ $json.symbol }}",
+            "Qty": "={{ $json.qty }}",
+            "Side (Buy/Sell)": "={{ $json.side }}",
+            "Price": "={{ $json.trail_price }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Symbol",
+              "displayName": "Symbol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Side (Buy/Sell)",
+              "displayName": "Side (Buy/Sell)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Qty",
+              "displayName": "Qty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Price",
+              "displayName": "Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "61a3c87f-00f1-4dad-94c1-bd9ef1a9c906",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        3360,
+        544
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "8TizGgm8cCFYR66A",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9,
+              "triggerAtMinute": 45
+            }
+          ]
+        }
+      },
+      "id": "ea31c298-b298-4e59-8057-a582a9fed462",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        928,
+        544
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## 1. Daily Trigger and Account Snapshot 📈\n**Schedule Trigger:** The workflow is automatically triggered every day at 4:45 PM (Asia/Jerusalem time). The time is set so it will run after the stock market in the US open\n\n**Alpaca-get-account-info:** It starts by fetching your current Alpaca paper trading account information, like your equity and balance.\n\n**write_account_balace_today:** This node logs your account balance for the day into a Google Sheet named \"balance\". It also calculates and records the daily percentage change in your balance, allowing you to track performance over time.",
+        "height": 560,
+        "width": 620,
+        "color": 6
+      },
+      "id": "2b54791d-fec9-47f4-bf86-4e967884c5c0",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        896,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2. Sentiment-Based Stock Selection 👍👎\n**read_sentiments_score_today:** The workflow reads the sentiment scores from a google sheet the scores were generated by a \"Sentiment Analysis Bot\"([template link](https://n8n.io/workflows/5369-automated-stock-sentiment-analysis-with-google-gemini-and-eodhd-news-api/)) for the current day from the \"sentiments\" sheet in a sentiment analysis Google Sheet.\n\n**filter_top_sentiment_score:** This code block selects the top four stocks with the highest sentiment scores from the list, focusing your trading strategy on the most promising assets.\n\n**Alpaca_get_open_positions:** It then retrieves a list of all currently open positions in your Alpaca account to compare against the top sentiment stocks.",
+        "height": 560,
+        "width": 620
+      },
+      "id": "a2bc2441-e498-4de4-9d5e-b4af8fa1d5d4",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1552,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 3. Trading Logic and Execution ⚙️\n**create_positions_to_close_and_positions_two_open:** This is the core logic of your trading strategy. The code compares the stocks you currently hold with the top four sentiment stocks for the day.\n\nIt identifies which of your current positions are no longer in the top four and marks them to be sold.\n\nIt identifies which of the top four sentiment stocks you do not currently own and marks them to be bought.\n\nIt calculates the total market value of the positions to be sold and divides that amount equally among the new stocks to be purchased.\n\n**positions_to_close:** This node takes the list of stocks to be sold and processes them one by one.\n\n**Alpaca-post-order-sell:** For each stock in the \"to-sell\" list, this node sends a \"sell\" order to Alpaca to close the position.\n\n**Wait:** A two-minute pause is implemented to ensure that the sell orders are processed and the funds are available before the buy orders are placed.\n\n**positions_to_open:** This node takes the list of top-sentiment stocks that you don't currently own.\n\n**Alpaca-post-order-buy:** For each of these stocks, a \"buy\" order is sent to Alpaca using the allocated portion of the funds from the sold assets.",
+        "height": 840,
+        "width": 840,
+        "color": 3
+      },
+      "id": "e80a7608-0850-4da6-af19-a2d271a6960c",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2208,
+        -48
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 4. Logging and Record-Keeping 📝\n**merge_orders_to_write_to_sheets:** This node gathers the results from both the buy and sell orders.\n\n**Google Sheets (Append):** Finally, the details of every trade (date, symbol, order type, and value) are logged in the \"positions\" sheet of your Google Sheet, providing a complete record of all trading activity.",
+        "height": 520,
+        "width": 520,
+        "color": 4
+      },
+      "id": "d824c44b-d4c3-4334-b563-f0390541c2e8",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3088,
+        288
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7263e3d8-a6c5-4101-a994-ba38b5679a6b",
+              "leftValue": "={{ $('create_positions_to_close_and_positions_two_open').item.json.positions_to_close[0] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2688,
+        448
+      ],
+      "id": "37c44c57-79bf-499d-9d15-b2d55f49bc7e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a ruthless hedge fund analyst.\n\nINPUT DATA:\n{{ $json }}\n\nINSTRUCTIONS:\n1. Analyze the headlines for positive sentiment (e.g., earnings beat, new product, partnership).\n2. IGNORE general market news or vague fluff.\n3. Select the TOP 40 stocks that have the strongest specific catalysts.\n4. Return ONLY a JSON array.\n\nREQUIRED OUTPUT FORMAT:\n[\n  {\n    \"symbol\": \"TICKER\",\n    \"reason\": \"Short summary of why\",\n    \"qty\": 1-30\n  }\n]\n\nYou are a ruthless hedge fund analyst. IMPORTANT: You MUST pick 40 stocks today even if the news is old. Do not return an empty list. INPUT DATA: {{ $json }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1968,
+        848
+      ],
+      "id": "0c13162d-6587-4338-8e75-ec36e2f3841d",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PY49zspVstEAbUB8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://data.alpaca.markets/v1beta1/screener/stocks/most-actives",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "by",
+              "value": "volume"
+            },
+            {
+              "name": "top",
+              "value": "100"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APCA-API-KEY-ID",
+              "value": "PKXT7VM3545L6HYDMGFOAPDWK4"
+            },
+            {
+              "name": "APCA-API-SECRET-KEY",
+              "value": "6PGLYE7AMiG4yCSBkUXbVFt85ZH15FjRvF2wMajRQ6xv"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1312,
+        848
+      ],
+      "id": "90408e81-d2da-42a1-864f-d5c7186f295c",
+      "name": "Get Top Stocks",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the list of stocks from the input\n// We use 'items[0]' because we are in \"Run Once for All Items\" mode\nconst stocks = items[0].json.most_actives;\n\n// 2. Extract just the symbols and join them with commas\nconst symbolString = stocks.map(s => s.symbol).join(',');\n\n// 3. Return the clean list as one item\nreturn [{ json: { symbols: symbolString } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1536,
+        848
+      ],
+      "id": "4ff093dd-d15d-4f4a-b56b-122c29c73ea8",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "https://data.alpaca.markets/v1beta1/news",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "symbols",
+              "value": "AAPL,TSLA,NVDA"
+            },
+            {
+              "name": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APCA-API-KEY-ID",
+              "value": "PKXT7VM3545L6HYDMGFOAPDWK4"
+            },
+            {
+              "name": "APCA-API-SECRET-KEY",
+              "value": "6PGLYE7AMiG4yCSBkUXbVFt85ZH15FjRvF2wMajRQ6xv"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1744,
+        848
+      ],
+      "id": "5bedfb34-cfda-4b95-bcea-6343b68ef1c2",
+      "name": "Get News"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "positions_to_open",
+        "options": {}
+      },
+      "id": "b8e46088-feb2-4e97-a40b-97e20c479b16",
+      "name": "positions_to_open",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        2480,
+        640
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Alpaca-get-account-info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "positions_to_close": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alpaca-post-order-buy": {
+      "main": [
+        [
+          {
+            "node": "merge_orders_to_write_to_sheets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Alpaca-post-order-sell": {
+      "main": [
+        [
+          {
+            "node": "merge_orders_to_write_to_sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alpaca-get-account-info": {
+      "main": [
+        [
+          {
+            "node": "write_account_balace_today",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Top Stocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alpaca_get_open_positions": {
+      "main": [
+        [
+          {
+            "node": "create_positions_to_close_and_positions_two_open",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "write_account_balace_today": {
+      "main": [
+        [
+          {
+            "node": "Alpaca_get_open_positions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge_orders_to_write_to_sheets": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_positions_to_close_and_positions_two_open": {
+      "main": [
+        [
+          {
+            "node": "positions_to_close",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "positions_to_open",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Alpaca-post-order-sell",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "create_positions_to_close_and_positions_two_open",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Top Stocks": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get News": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "positions_to_open": {
+      "main": [
+        [
+          {
+            "node": "Alpaca-post-order-buy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "d2953c56-23f5-4462-b669-28a03f7b426a",
+  "meta": {
+    "templateId": "5711",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8bdf8d43cc6be38d391e9201d175a81b3312eba1f3713212873f297b0df5c90a"
+  },
+  "id": "kpW418OFpsuD3fYK",
+  "tags": []
+}
